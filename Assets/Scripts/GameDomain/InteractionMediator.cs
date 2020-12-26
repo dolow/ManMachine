@@ -56,6 +56,15 @@ public partial class InteractionMediator : MonoBehaviour
             this.rotate = 0.0f;
         }
 
+        if (this.action)
+        {
+            this.action = false;
+            if (!this.switchMainCameraTrigger && !this.switchShoulderCameraSideTrigger)
+            {
+                this.RequestAction();
+            }
+        }
+
         if (this.switchMainCameraTrigger)
         {
             this.switchMainCameraTrigger = false;
@@ -70,12 +79,6 @@ public partial class InteractionMediator : MonoBehaviour
         {
             this.restartLevel = false;
             this.RequestRestartLevel();
-        }
-
-        if (this.action)
-        {
-            this.action = false;
-            this.RequestAction();
         }
     }
 }
