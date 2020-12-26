@@ -8,20 +8,20 @@ ManMachine is a game for Unity 1 week game jam takes place in unityroom.
 
 ## Move
 
-Keyboard: AWSD / KJ
-Finger: Swiping
-Mouse: Dragging
+- Keyboard: AWSD / KJ
+- Finger: Swiping
+- Mouse: Dragging
 
 ## Switch Camera
 
-Keyboard: UI
-Other: Buttons on HUD
+- Keyboard: UI
+- Other: Buttons on HUD
 
 ## Interact
 
-Keyboard: Space
-Finger: Tap
-Mouse: Click
+- Keyboard: Space
+- Finger: Tap
+- Mouse: Click
 
 # License
 
