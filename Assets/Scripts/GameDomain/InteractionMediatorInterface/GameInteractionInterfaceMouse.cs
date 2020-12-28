@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class InteractionMediatorMouse : AInteractionMediatorInterface
+public class GameInteractionInterfaceMouse : AGameInteractionInterface
 {
     public float screenInteractionMaxX = 300.0f;
     public float screenInteractionMaxY = 300.0f;

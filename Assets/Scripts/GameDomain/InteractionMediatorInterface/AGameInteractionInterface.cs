@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public abstract class AInteractionMediatorInterface : MonoBehaviour
+public abstract class AGameInteractionInterface : MonoBehaviour
 {
     protected int intention = 0;
 

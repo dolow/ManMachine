@@ -1,4 +1,4 @@
-﻿public class InteractionMediatorUI : AInteractionMediatorInterface
+﻿public class GameInteractionInterfaceUI : AGameInteractionInterface
 {
     private UIInteraction uiInteraction = null;
 

@@ -48,7 +48,7 @@ public partial class InteractionMediator : MonoBehaviour
     public RestartLevel RequestRestartLevel = null;
     public Action RequestAction = null;
 
-    private List<AInteractionMediatorInterface> interactionInterfaces = new List<AInteractionMediatorInterface>();
+    private List<AGameInteractionInterface> interactionInterfaces = new List<AGameInteractionInterface>();
 
     public static int MoveIntentions
     {
@@ -94,19 +94,19 @@ public partial class InteractionMediator : MonoBehaviour
     {
         if (this.keyboard)
         {
-            this.interactionInterfaces.Add(this.gameObject.AddComponent<InteractionMediatorKeyboard>());
+            this.interactionInterfaces.Add(this.gameObject.AddComponent<GameInteractionInterfaceKeyboard>());
         }
         if (this.touchScreen)
         {
-            this.interactionInterfaces.Add(this.gameObject.AddComponent<InteractionMediatorTouch>());
+            this.interactionInterfaces.Add(this.gameObject.AddComponent<GameInteractionInterfaceTouch>());
         }
         if (this.mouse)
         {
-            this.interactionInterfaces.Add(this.gameObject.AddComponent<InteractionMediatorMouse>());
+            this.interactionInterfaces.Add(this.gameObject.AddComponent<GameInteractionInterfaceMouse>());
         }
         if (this.ui)
         {
-            InteractionMediatorUI interactionMediatorUi = this.gameObject.AddComponent<InteractionMediatorUI>();
+            GameInteractionInterfaceUI interactionMediatorUi = this.gameObject.AddComponent<GameInteractionInterfaceUI>();
             this.interactionInterfaces.Add(interactionMediatorUi);
             interactionMediatorUi.SetUIInteractionRegistry(this.uiInteractionRegistry);
         }

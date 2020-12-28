@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class InteractionMediatorTouch : AInteractionMediatorInterface
+public class GameInteractionInterfaceTouch : AGameInteractionInterface
 {
     public float screenInteractionMaxX = 300.0f;
     public float screenInteractionMaxY = 300.0f;

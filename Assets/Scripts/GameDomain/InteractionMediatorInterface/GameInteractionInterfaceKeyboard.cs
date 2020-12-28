@@ -39,7 +39,7 @@ public struct KeyboardSemantic
     }
 }
 
-public class InteractionMediatorKeyboard : AInteractionMediatorInterface
+public class GameInteractionInterfaceKeyboard : AGameInteractionInterface
 {
     public static KeyboardSemantic DefaultKeyboard
     {
@@ -67,7 +67,7 @@ public class InteractionMediatorKeyboard : AInteractionMediatorInterface
     {
         this.keyboardInteraction = this.gameObject.AddComponent<KeyboardInteraction>();
 
-        this.keySemantic = InteractionMediatorKeyboard.DefaultKeyboard;
+        this.keySemantic = GameInteractionInterfaceKeyboard.DefaultKeyboard;
 
         this.keyboardInteraction.OnHoldBegan += this.KeyPressBegan;
         this.keyboardInteraction.OnHolding += this.KeyPressing;
