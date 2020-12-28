@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+
 public class MouseInteraction : MonoBehaviour
 {
     public delegate void ClickBegan(MouseInteraction interaction);
@@ -24,7 +25,7 @@ public class MouseInteraction : MonoBehaviour
 
     void Awake()
     {
-        this.SetDevice(Application.platform);
+        this.device = new ScreenInteractionDeviceClick();
     }
 
     void Update()
@@ -97,23 +98,5 @@ public class MouseInteraction : MonoBehaviour
         float y = Mathf.Min(Mathf.Abs(direction.y), maxY) / maxY;
 
         return new Vector3(direction.x < 0 ? -x : x, direction.y < 0 ? -y : y, 0.0f);
-    }
-
-    private void SetDevice(RuntimePlatform platform)
-    {
-        switch (platform)
-        {
-            case RuntimePlatform.Android:
-            case RuntimePlatform.IPhonePlayer:
-                {
-                    this.device = new ScreenInteractionDeviceTouch();
-                    break;
-                }
-            default:
-                {
-                    this.device = new ScreenInteractionDeviceClick();
-                    break;
-                }
-        }
     }
 }

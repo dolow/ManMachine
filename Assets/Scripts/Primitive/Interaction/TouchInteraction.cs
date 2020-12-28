@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 // TODO: multi touch
 public class TouchInteraction : MonoBehaviour
@@ -26,7 +25,7 @@ public class TouchInteraction : MonoBehaviour
 
     void Awake()
     {
-        this.SetDevice(Application.platform);
+        this.device = new ScreenInteractionDeviceTouch();
     }
 
     void Update()
@@ -99,23 +98,5 @@ public class TouchInteraction : MonoBehaviour
         float y = Mathf.Min(Mathf.Abs(direction.y), maxY) / maxY;
 
         return new Vector3(direction.x < 0 ? -x : x, direction.y < 0 ? -y : y, 0.0f);
-    }
-
-    private void SetDevice(RuntimePlatform platform)
-    {
-        switch (platform)
-        {
-            case RuntimePlatform.Android:
-            case RuntimePlatform.IPhonePlayer:
-                {
-                    this.device = new ScreenInteractionDeviceTouch();
-                    break;
-                }
-            default:
-                {
-                    this.device = new ScreenInteractionDeviceClick();
-                    break;
-                }
-        }
     }
 }
