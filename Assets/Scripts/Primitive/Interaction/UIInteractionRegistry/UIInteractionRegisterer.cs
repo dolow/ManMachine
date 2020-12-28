@@ -21,7 +21,6 @@ public class UIInteractionRegisterer : MonoBehaviour
 
     public void OnButtonPressed()
     {
-        
         if (this.registry != null)
         {
             this.registry.OnButtonPressed(this);
