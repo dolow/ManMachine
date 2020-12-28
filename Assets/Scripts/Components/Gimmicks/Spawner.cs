@@ -20,6 +20,7 @@ public class Spawner : MonoBehaviour
 
         Vector3 rot = this.transform.rotation.eulerAngles;
         Quaternion quot = Quaternion.Euler(0.0f, rot.y, 0.0f);
+        // can not request to unexisting entity
         Spawnee instance = Instantiate<Spawnee>(this.spawnee, this.transform.position + this.offset, quot);
         instance.Spawn(this, spawnable);
 

@@ -11,7 +11,7 @@ public class Unlocker : MonoBehaviour
 
     public void Unlock(Unlockable unlockable)
     {
-        this.unlockee.Unlock(unlockable, this);
+        this.unlockee.RequestUnlock(unlockable, this);
         this.OnUnlocked?.Invoke(unlockable);
     }
 }
