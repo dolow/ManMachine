@@ -3242,6 +3242,7 @@ GameObject:
   - component: {fileID: 1470428601}
   - component: {fileID: 1470428603}
   - component: {fileID: 1470428602}
+  - component: {fileID: 1470428606}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -3322,6 +3323,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1470428606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1470428600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3fa791327bd14316aa202c0e6b10166, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyboard: 1
+  touchScreen: 1
+  mouse: 1
+  ui: 1
+  uiInteractionRegistry: {fileID: 1470428601}
 --- !u!1 &1475263181
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,6 +18,7 @@ project.userprefs
 # Project specific
 AndroidBuild/
 WebGL/
+*_WebGL/
 AndroidBuildTpl/
 
 # Can not redistribute via github

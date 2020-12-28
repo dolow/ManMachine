@@ -39,7 +39,7 @@ public struct KeyboardSemantic
     }
 }
 
-public partial class InteractionMediator : MonoBehaviour
+public class InteractionMediatorKeyboard : AInteractionMediatorInterface
 {
     public static KeyboardSemantic DefaultKeyboard
     {
@@ -61,10 +61,13 @@ public partial class InteractionMediator : MonoBehaviour
     }
 
     private KeyboardSemantic keySemantic;
+    private KeyboardInteraction keyboardInteraction = null;
 
-    private void AwakeKeyboardInteraction(KeyboardSemantic semantic)
+    private void Awake()
     {
-        this.keySemantic = semantic;
+        this.keyboardInteraction = this.gameObject.AddComponent<KeyboardInteraction>();
+
+        this.keySemantic = InteractionMediatorKeyboard.DefaultKeyboard;
 
         this.keyboardInteraction.OnHoldBegan += this.KeyPressBegan;
         this.keyboardInteraction.OnHolding += this.KeyPressing;
@@ -81,44 +84,44 @@ public partial class InteractionMediator : MonoBehaviour
         if (key == this.keySemantic.forward)
         {
             this.moveDirection.z = 1.0f;
-            this.moving = true;
+            this.AddIntent(InteractionSemantic.MoveForward);
         }
         else if (key == this.keySemantic.backward)
         {
             this.moveDirection.z = -1.0f;
-            this.moving = true;
+            this.AddIntent(InteractionSemantic.MoveBackward);
         }
         else if (key == this.keySemantic.left)
         {
             this.moveDirection.x = -1.0f;
-            this.moving = true;
+            this.AddIntent(InteractionSemantic.MoveLeft);
         }
         else if (key == this.keySemantic.right)
         {
             this.moveDirection.x = 1.0f;
-            this.moving = true;
+            this.AddIntent(InteractionSemantic.MoveRight);
         }
         else if (key == this.keySemantic.rotateLeft)
         {
-            this.rotate = -1.0f;
-            this.moving = true;
+            this.rotation = -1.0f;
+            this.AddIntent(InteractionSemantic.RotateLeft);
         }
         else if (key == this.keySemantic.rotateRight)
         {
-            this.rotate = 1.0f;
-            this.moving = true;
+            this.rotation = 1.0f;
+            this.AddIntent(InteractionSemantic.RotateRight);
         }
         else if (key == this.keySemantic.switchMainCamera)
         {
-            this.switchMainCameraTrigger = true;
+            this.AddIntent(InteractionSemantic.SwitchMainCamera);
         }
         else if (key == this.keySemantic.switchShoulderCameraSide)
         {
-            this.switchShoulderCameraSideTrigger = true;
+            this.AddIntent(InteractionSemantic.SwitchShoulderCameraSide);
         }
         else if (key == this.keySemantic.action)
         {
-            this.action = true;
+            this.AddIntent(InteractionSemantic.Interact);
         }
     }
 
@@ -127,53 +130,66 @@ public partial class InteractionMediator : MonoBehaviour
         if (key == this.keySemantic.forward)
         {
             this.moveDirection.z = 1.0f;
-            this.moving = true;
+            this.AddIntent(InteractionSemantic.MoveForward);
         }
         else if (key == this.keySemantic.backward)
         {
             this.moveDirection.z = -1.0f;
-            this.moving = true;
+            this.AddIntent(InteractionSemantic.MoveBackward);
         }
         else if (key == this.keySemantic.left)
         {
             this.moveDirection.x = -1.0f;
-            this.moving = true;
+            this.AddIntent(InteractionSemantic.MoveLeft);
         }
         else if (key == this.keySemantic.right)
         {
             this.moveDirection.x = 1.0f;
-            this.moving = true;
+            this.AddIntent(InteractionSemantic.MoveRight);
         }
         else if (key == this.keySemantic.rotateLeft)
         {
-            this.rotate = -1.0f;
-            this.moving = true;
+            this.rotation = -1.0f;
+            this.AddIntent(InteractionSemantic.RotateLeft);
         }
         else if (key == this.keySemantic.rotateRight)
         {
-            this.rotate = 1.0f;
-            this.moving = true;
+            this.rotation = 1.0f;
+            this.AddIntent(InteractionSemantic.RotateRight);
         }
     }
 
     protected void KeyPressEnding(KeyboardInteraction interaction, KeyCode key, float duration)
     {
-        bool moveKey = false;
-        for (int i = 0; i < this.keySemantic.KeyCodes.Count; i++)
+        if (key == this.keySemantic.forward)
         {
-            KeyCode code = this.keySemantic.KeyCodes[i];
-            if (this.keyboardInteraction.IsHolding(this.keySemantic.KeyCodes[i])) {
-                if (code != this.keySemantic.switchMainCamera && code != this.keySemantic.switchShoulderCameraSide)
-                {
-                    moveKey = true;
-                    break;
-                }
-            }
+            this.moveDirection.z -= 1.0f;
+            this.RemoveIntent(InteractionSemantic.MoveForward);
         }
-
-        if (!moveKey)
+        else if (key == this.keySemantic.backward)
         {
-            this.moving = false;
+            this.moveDirection.z -= -1.0f;
+            this.RemoveIntent(InteractionSemantic.MoveBackward);
+        }
+        else if (key == this.keySemantic.left)
+        {
+            this.moveDirection.x -= -1.0f;
+            this.RemoveIntent(InteractionSemantic.MoveLeft);
+        }
+        else if (key == this.keySemantic.right)
+        {
+            this.moveDirection.x -= 1.0f;
+            this.RemoveIntent(InteractionSemantic.MoveRight);
+        }
+        else if (key == this.keySemantic.rotateLeft)
+        {
+            this.rotation -= -1.0f;
+            this.RemoveIntent(InteractionSemantic.RotateLeft);
+        }
+        else if (key == this.keySemantic.rotateRight)
+        {
+            this.rotation -= 1.0f;
+            this.RemoveIntent(InteractionSemantic.RotateRight);
         }
     }
 }

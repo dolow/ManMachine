@@ -27,15 +27,19 @@ public class PlayableScene : MonoBehaviour
             return;
         }
 
-        InteractionMediator mediator = this.gameObject.AddComponent<InteractionMediator>();
+        InteractionMediator mediator = this.gameObject.GetComponent<InteractionMediator>();
+        if (mediator == null)
+        {
+            Debug.LogError("InteractionMediator is required");
+            return;
+        }
+
         mediator.RequestMove += this.MovePlayer;
         mediator.RequestStop += this.StopPlayer;
         mediator.RequestSwitchMainCamera += this.SwitchMainCamera;
         mediator.RequestSwitchShoulderCameraSide += this.SwitchShoulderCameraSide;
         mediator.RequestRestartLevel += this.RestartLevel;
         mediator.RequestAction += this.Action;
-
-        mediator.SetUIInteractionRegistry(this.GetComponent<UIInteractionRegistry>());
 
         this.TpsCamera.enabled = true;
         this.OverlookCamera.enabled = false;

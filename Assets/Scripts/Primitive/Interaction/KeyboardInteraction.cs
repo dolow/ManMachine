@@ -20,6 +20,60 @@ public class KeyboardInteraction : MonoBehaviour
 
     void Update()
     {
+        List<KeyCode> detectedKeys = new List<KeyCode>();
+
+        // released
+        for (int i = 0; i < this.listeningKeys.Count; i++)
+        {
+            KeyCode key = this.listeningKeys[i];
+            if (Input.GetKey(key))
+            {
+                detectedKeys.Add(key);
+                continue;
+            }
+            if (!this.holdingKeys.ContainsKey(key))
+            {
+                continue;
+            }
+
+            float duration = this.holdingKeys[key];
+            this.holdingKeys.Remove(key);
+            this.OnHoldEnding?.Invoke(this, key, duration);
+        }
+
+        // holding
+        for (int i = 0; i < detectedKeys.Count; i++)
+        {
+            KeyCode key = detectedKeys[i];
+
+            if (!this.holdingKeys.ContainsKey(key))
+            {
+                continue;
+            }
+
+            float duration = this.holdingKeys[key];
+            duration += Time.deltaTime;
+            this.holdingKeys[key] = duration;
+            this.OnHolding?.Invoke(this, key, this.holdingKeys[key]);
+        }
+
+
+        // began
+        for (int i = 0; i < detectedKeys.Count; i++)
+        {
+            KeyCode key = detectedKeys[i];
+
+            if (this.holdingKeys.ContainsKey(key))
+            {
+                continue;
+            }
+
+            this.holdingKeys.Add(key, 0.0f);
+            // this.holdingKeys.Add(key, 0.0f);
+            this.OnHoldBegan?.Invoke(this, key);
+        }
+
+        /*
         for (int i = 0; i < this.listeningKeys.Count; i++)
         {
             KeyCode key = this.listeningKeys[i];
@@ -49,6 +103,7 @@ public class KeyboardInteraction : MonoBehaviour
                 }
             }
         }
+        */
         // TODO: suspended case while holding
     }
 

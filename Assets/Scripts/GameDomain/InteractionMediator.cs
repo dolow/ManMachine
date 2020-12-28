@@ -1,5 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+
+public enum InteractionSemantic
+{
+    MoveForward,
+    MoveBackward,
+    MoveLeft,
+    MoveRight,
+    MoveAny,
+
+    RotateLeft,
+    RotateRight,
+    RotateAny,
+
+    SwitchMainCamera,
+    SwitchShoulderCameraSide,
+
+    RestartLevel,
+
+    Interact
+}
 
 /// <summary>
 /// InteractionMediator mediates user's primitive interaction to semantic game control 
@@ -13,6 +34,13 @@ public partial class InteractionMediator : MonoBehaviour
     public delegate void RestartLevel();
     public delegate void Action();
 
+    public bool keyboard = false;
+    public bool touchScreen = false;
+    public bool mouse = false;
+    public bool ui = false;
+
+    public UIInteractionRegistry uiInteractionRegistry = null;
+
     public Move RequestMove = null;
     public Stop RequestStop = null;
     public SwitchMainCamera RequestSwitchMainCamera = null;
@@ -20,65 +48,175 @@ public partial class InteractionMediator : MonoBehaviour
     public RestartLevel RequestRestartLevel = null;
     public Action RequestAction = null;
 
-    private ScreenInteraction screenInteraction = null;
-    private KeyboardInteraction keyboardInteraction = null;
-    private UIInteraction uiInteraction = null;
+    private List<AInteractionMediatorInterface> interactionInterfaces = new List<AInteractionMediatorInterface>();
 
-    private Vector3 moveDirection = Vector3.zero;
-    private bool moving = false;
-    private float rotate = 0.0f;
-    private bool switchMainCameraTrigger = false;
-    private bool switchShoulderCameraSideTrigger = false;
-    private bool restartLevel = false;
-    private bool action = false;
-
-    void Awake()
+    public static int MoveIntentions
     {
-        this.screenInteraction = this.gameObject.AddComponent<ScreenInteraction>();
-        this.keyboardInteraction = this.gameObject.AddComponent<KeyboardInteraction>();
-        this.uiInteraction = this.gameObject.AddComponent<UIInteraction>();
-
-        this.AwakeKeyboardInteraction(InteractionMediator.DefaultKeyboard);
-        this.AwakeScreenInteraction();
-        this.AwakeUIInteraction();
+        get
+        {
+            return (
+                (1 << (int)InteractionSemantic.MoveAny) |
+                (1 << (int)InteractionSemantic.RotateAny) |
+                (1 << (int)InteractionSemantic.MoveForward) |
+                (1 << (int)InteractionSemantic.MoveBackward) |
+                (1 << (int)InteractionSemantic.MoveLeft) |
+                (1 << (int)InteractionSemantic.MoveRight) |
+                (1 << (int)InteractionSemantic.RotateLeft) |
+                (1 << (int)InteractionSemantic.RotateRight)
+            );
+        }
+        set { }
+    }
+    public static int CameraIntentions
+    {
+        get
+        {
+            return (
+                (1 << (int)InteractionSemantic.SwitchMainCamera) |
+                (1 << (int)InteractionSemantic.SwitchShoulderCameraSide)
+            );
+        }
+        set { }
+    }
+    public static int InteractionIntentions
+    {
+        get
+        {
+            return (
+                (1 << (int)InteractionSemantic.Interact)
+            );
+        }
+        set { }
     }
 
-    void Update()
+
+    private void Awake()
     {
-        if (!this.moving)
+        if (this.keyboard)
+        {
+            this.interactionInterfaces.Add(this.gameObject.AddComponent<InteractionMediatorKeyboard>());
+        }
+        if (this.touchScreen)
+        {
+            this.interactionInterfaces.Add(this.gameObject.AddComponent<InteractionMediatorTouch>());
+        }
+        if (this.mouse)
+        {
+            this.interactionInterfaces.Add(this.gameObject.AddComponent<InteractionMediatorMouse>());
+        }
+        if (this.ui)
+        {
+            InteractionMediatorUI interactionMediatorUi = this.gameObject.AddComponent<InteractionMediatorUI>();
+            this.interactionInterfaces.Add(interactionMediatorUi);
+            interactionMediatorUi.SetUIInteractionRegistry(this.uiInteractionRegistry);
+        }
+    }
+
+    private void Update()
+    {
+        if (!this.HasAnyIntention(MoveIntentions))
         {
             this.RequestStop?.Invoke();
         }
         else
         {
-            this.RequestMove?.Invoke(this.moveDirection.z, this.moveDirection.x, this.rotate);
-            this.moveDirection = Vector3.zero;
-            this.rotate = 0.0f;
+            this.ClearAnyIntention(MoveIntentions);
+
+            Vector3 movement = this.CompositMoveDirection();
+            float rotation = this.CompositRotation();
+
+            this.RequestMove?.Invoke(movement.z, movement.x, rotation);
         }
 
-        if (this.action)
+        if (this.HasAnyIntention(InteractionIntentions))
         {
-            this.action = false;
-            if (!this.switchMainCameraTrigger && !this.switchShoulderCameraSideTrigger)
+            this.ClearAnyIntention(InteractionIntentions);
+            if (!this.HasAnyIntention(CameraIntentions))
             {
-                this.RequestAction();
+                this.RequestAction?.Invoke();
             }
         }
 
-        if (this.switchMainCameraTrigger)
+        if (this.HasAnyIntention(InteractionSemantic.SwitchMainCamera))
         {
-            this.switchMainCameraTrigger = false;
-            this.RequestSwitchMainCamera();
+            this.ClearAnyIntention(InteractionSemantic.SwitchMainCamera);
+            this.RequestSwitchMainCamera?.Invoke();
         }
-        if (this.switchShoulderCameraSideTrigger)
+        if (this.HasAnyIntention(InteractionSemantic.SwitchShoulderCameraSide))
         {
-            this.switchShoulderCameraSideTrigger = false;
-            this.RequestSwitchShoulderCameraSide();
+            this.ClearAnyIntention(InteractionSemantic.SwitchShoulderCameraSide);
+            this.RequestSwitchShoulderCameraSide?.Invoke();
         }
-        if (this.restartLevel)
+        if (this.HasAnyIntention(InteractionSemantic.RestartLevel))
         {
-            this.restartLevel = false;
-            this.RequestRestartLevel();
+            this.ClearAnyIntention(InteractionSemantic.RestartLevel);
+            this.RequestRestartLevel?.Invoke();
         }
+    }
+
+    private bool HasAnyIntention(InteractionSemantic semantic)
+    {
+        int flag = 1 << (int)semantic;
+        for (int i = 0; i < this.interactionInterfaces.Count; i++)
+        {
+            if (this.interactionInterfaces[i].HasIntent(flag))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool HasAnyIntention(int semantics)
+    {
+        for (int i = 0; i < this.interactionInterfaces.Count; i++)
+        {
+            if (this.interactionInterfaces[i].HasIntent(semantics))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void ClearAnyIntention(InteractionSemantic semantic)
+    {
+        int flag = 1 << (int)semantic;
+        for (int i = 0; i < this.interactionInterfaces.Count; i++)
+        {
+            this.interactionInterfaces[i].RemoveIntent(flag);
+        }
+    }
+    private void ClearAnyIntention(int semantics)
+    {
+        for (int i = 0; i < this.interactionInterfaces.Count; i++)
+        {
+            this.interactionInterfaces[i].RemoveIntent(semantics);
+        }
+    }
+
+    private Vector3 CompositMoveDirection()
+    {
+        Vector3 movement = Vector3.zero;
+
+        for (int i = 0; i < this.interactionInterfaces.Count; i++)
+        {
+            movement += this.interactionInterfaces[i].MoveDirection;
+        }
+
+        return movement;
+    }
+    private float CompositRotation()
+    {
+        float rotation = 0.0f;
+
+        for (int i = 0; i < this.interactionInterfaces.Count; i++)
+        {
+            rotation += this.interactionInterfaces[i].Rotation;
+        }
+
+        return rotation;
     }
 }

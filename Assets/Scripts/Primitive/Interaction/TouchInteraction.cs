@@ -2,12 +2,12 @@
 using UnityEngine;
 
 // TODO: multi touch
-public class ScreenInteraction : MonoBehaviour
+public class TouchInteraction : MonoBehaviour
 {
-    public delegate void HoldBegan(ScreenInteraction interaction);
-    public delegate void Holding(ScreenInteraction interaction);
-    public delegate void HoldEnding(ScreenInteraction interaction);
-    public delegate void Tap(ScreenInteraction interaction);
+    public delegate void HoldBegan(TouchInteraction interaction);
+    public delegate void Holding(TouchInteraction interaction);
+    public delegate void HoldEnding(TouchInteraction interaction);
+    public delegate void Tap(TouchInteraction interaction);
 
     public HoldBegan OnHoldBegan = null;
     public Holding OnHolding = null;
@@ -53,11 +53,11 @@ public class ScreenInteraction : MonoBehaviour
         {
             if (this.holding)
             {
-                this.OnHoldEnding?.Invoke(this);
                 if (this.holdingDuration <= this.tapDuration)
                 {
                     this.OnTap?.Invoke(this);
                 }
+                this.OnHoldEnding?.Invoke(this);
             }
 
             this.holding = false;

@@ -2090,6 +2090,8 @@ GameObject:
   - component: {fileID: 1009830951}
   - component: {fileID: 1009830952}
   - component: {fileID: 1009830949}
+  - component: {fileID: 1009830954}
+  - component: {fileID: 1009830953}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -2170,6 +2172,35 @@ MonoBehaviour:
   - {fileID: 705507997}
   rotateFeedbackers:
   - {fileID: 705507997}
+--- !u!114 &1009830953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1009830947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e83d165509dd4a8abacf1fe848df696, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1009830954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1009830947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3fa791327bd14316aa202c0e6b10166, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyboard: 1
+  touchScreen: 1
+  mouse: 1
+  ui: 1
+  uiInteractionRegistry: {fileID: 1009830951}
 --- !u!4 &1140903151 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2557061379648616846, guid: 7ca249af5e47344eaa69db3e3f24ed42,
