@@ -1563,7 +1563,9 @@ TextMesh:
 
     or
 
-    Tap / Click'
+    Tap / Click
+
+    near icon'
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1

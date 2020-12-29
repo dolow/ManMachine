@@ -110,15 +110,15 @@ public class Player : Actor
         this.RemoveActionableIfEligible<Rotatable, Rotator>(other.gameObject, ActionableType.Rotate);
     }
 
-    private bool AddActionableIfEligible<Capability, Effectability>(GameObject worker, ActionableType type)
+    private bool AddActionableIfEligible<Activator, Worker>(GameObject worker, ActionableType type)
     {
-        Capability c = this.GetComponent<Capability>();
+        Activator c = this.GetComponent<Activator>();
         if (c == null)
         {
             return false;
         }
 
-        Effectability e = worker.GetComponent<Effectability>();
+        Worker e = worker.GetComponent<Worker>();
         if (e == null)
         {
             return false;
@@ -128,15 +128,15 @@ public class Player : Actor
 
         return true;
     }
-    private bool RemoveActionableIfEligible<Capability, Effectability>(GameObject worker, ActionableType type)
+    private bool RemoveActionableIfEligible<Activator, Worker>(GameObject worker, ActionableType type)
     {
-        Capability c = this.GetComponent<Capability>();
+        Activator c = this.GetComponent<Activator>();
         if (c == null)
         {
             return false;
         }
 
-        Effectability e = worker.GetComponent<Effectability>();
+        Worker e = worker.GetComponent<Worker>();
         if (e == null)
         {
             return false;
